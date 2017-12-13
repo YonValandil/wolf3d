@@ -15,6 +15,7 @@
 # define WIDTH			910
 # define HEIGHT_IMG		600
 # define WIDTH_IMG		910
+# define SIZE_BLOCK		64
 
 # if defined(linux) || defined(__linux) || defined(__linux__)
 #  define UP			65362
@@ -55,6 +56,32 @@ typedef struct			s_coords
 	unsigned int		color;
 }						t_coords;
 
+typedef struct			s_Dcoords
+{
+	double				x;
+	double				y;
+}						t_Dcoords;
+
+typedef struct			s_player
+{
+	int					size;
+	double				rot;
+	double				speed;
+	struct s_Dcoords	dir;
+	struct s_Dcoords	pos;
+	struct s_Dcoords	cam;
+}						t_player;
+
+typedef struct			s_raycast
+{
+	int					hit;
+	struct s_coords		step;
+	struct s_Dcoords	pos;
+	struct s_Dcoords	dir;
+	struct s_Dcoords	side;
+	struct s_Dcoords	delta;
+}						t_raycast;
+
 typedef struct			s_img
 {
 	int					l;
@@ -80,6 +107,8 @@ typedef struct			s_env
 	size_t				nbr_line;
 	size_t				nbr_col;
 	size_t				check;
+	struct s_player		player;
+	struct s_raycast	ray;
 	struct s_img		img;
 	struct s_win		win;
 	struct s_list		*map;
@@ -87,14 +116,15 @@ typedef struct			s_env
 
 void					exit_error(const char *s);
 void					del_map(void *map, size_t size);
-size_t					arrlen(void **arr);
-void					arrdel(void ***arr);
 void					set_env(t_env *env);
+void 					set_player(t_env *);
 void					set_img(t_env *env);
 void					set_string(t_env *env);
 t_coords				set_pixel(int x, int y, int color);
 void					put_pixel_img(t_env *env, t_coords p);
 void					parse(t_env *env, char *buff);
+void 					wolf_loop(t_env *);
+void 					ray_scan(t_env *);
 int						controller(int keycode, void *param);
 void					translate(int keycode, t_env *env);
 void					rotate(int keycode, t_env *env);

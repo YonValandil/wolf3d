@@ -31,7 +31,7 @@ void	check_nbr_line(t_env *env)
 		exit_error("too much lines");
 }
 
-void	parse_grid(t_env *env, char **grid, int *tmp) //verifier que la map est fermee
+void	parse_grid(t_env *env, char **grid, int *tmp) //verifier que la map est fermee et pas trop petite
 {
 	size_t	i;
 	int		j;
@@ -44,13 +44,13 @@ void	parse_grid(t_env *env, char **grid, int *tmp) //verifier que la map est fer
 	{
 		j = -1;
 		while (grid[i][++j])
-			if (grid[i][j] < '0' && grid[i][j] > '9')
+			if (grid[i][j] == '0' || grid[i][j] == '1')
 				exit_error("map content error");
 		tmp[i] = ft_atoi(grid[env->nbr_col - 1 - i]);
 	}
 }
 
-void	parse(t_env *env, char *buff)
+void	parse(t_env *env, char *buff) //peut-etre un tab 2d et non une list(?)
 {
 	char	*line;
 	char	**grid;
@@ -66,7 +66,7 @@ void	parse(t_env *env, char *buff)
 		grid = ft_strsplit(line, ' ');
 		ft_strdel(&line);
 		if (env->check == 0)
-			env->nbr_col = arrlen((void**)grid);
+			env->nbr_col = ft_arrlen((void**)grid);
 		if (env->nbr_col > RANGE_MAP)
 			exit_error("too much columns");
 		if (!(tmp = ft_memalloc(sizeof(int) * env->nbr_col)))

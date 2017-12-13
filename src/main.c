@@ -18,37 +18,40 @@ void	exit_error(const char *s)
 	exit(EXIT_FAILURE);
 }
 
-size_t	arrlen(void **arr)
-{
-	size_t i;
-
-	i = 0;
-	while ((unsigned char*)arr[i])
-		++i;
-	return (i);
-}
-
-void	arrdel(void ***arr)
-{
-	char **tmp;
-
-	if (arr && *arr)
-	{
-		tmp = *((char ***)arr);
-		while (*tmp)
-		{
-			ft_memdel((void **)tmp);
-			++tmp;
-		}
-		free(*arr);
-		*arr = NULL;
-	}
-}
-
 void	del_map(void *map, size_t size)
 {
 	(void)size;
 	ft_memdel((void*)&map);
+}
+
+t_coords	set_pixel(int x, int y, int color)
+{
+	t_coords p;
+
+	p.x = x;
+	p.y = y;
+	p.color = color;
+	return (p);
+}
+
+void	put_pixel_img(t_env *env, t_coords p)
+{
+	int r;
+	int g;
+	int b;
+
+	r = (p.color & 0xFF0000) >> 16;
+	g = (p.color & 0xFF00) >> 8;
+	b = (p.color & 0xFF);
+	if (p.y >= 0 && p.x >= 0 && p.y < HEIGHT_IMG && p.x < WIDTH_IMG)
+	{
+		env->img.data[(p.y * env->img.size_line) +
+			((env->img.bpp / 8) * p.x) + 2] = r;
+		env->img.data[(p.y * env->img.size_line) +
+			((env->img.bpp / 8) * p.x) + 1] = g;
+		env->img.data[(p.y * env->img.size_line) +
+			((env->img.bpp / 8) * p.x)] = b;
+	}
 }
 
 int		main(int argc, char *argv[])
